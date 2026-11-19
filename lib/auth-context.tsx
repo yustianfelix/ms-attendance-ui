@@ -8,14 +8,15 @@ import React, {
   useCallback,
 } from "react";
 import { useRouter, usePathname } from "next/navigation";
+import { getProfile } from "./api/employee/employee";
+import { login as loginApi } from "./api/auth/auth";
 import {
-  api,
   clearAuthSession,
   getStoredToken,
   getStoredUser,
   setAuthSession,
-  type EmployeeProfile,
-} from "./api";
+} from "./api/session";
+import type { EmployeeProfile } from "./api/employee/dto";
 
 interface AuthContextType {
   user: EmployeeProfile | null;
@@ -31,11 +32,17 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<EmployeeProfile | null>(() => getStoredUser());
-  const [token, setToken] = useState<string | null>(() => getStoredToken());
-  const [isLoading, setIsLoading] = useState(false);
+  const [user, setUser] = useState<EmployeeProfile | null>(null);
+  const [token, setToken] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const pathname = usePathname();
+
+  useEffect(() => {
+    setUser(getStoredUser());
+    setToken(getStoredToken());
+    setIsLoading(false);
+  }, []);
 
   const logout = useCallback(() => {
     clearAuthSession();
@@ -50,7 +57,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!currentToken || !currentUser?.employeeId) return null;
 
     try {
-      const freshProfile = await api.getProfile(currentUser.employeeId);
+      const freshProfile = await getProfile(currentUser.employeeId);
       const mergedUser = { ...currentUser, ...freshProfile };
       setUser(mergedUser);
       setAuthSession(currentToken, mergedUser);
@@ -66,7 +73,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Background profile sync
   useEffect(() => {
     if (token && employeeId) {
-      api.getProfile(employeeId)
+      getProfile(employeeId)
         .then((fresh) => {
           setUser((prev) => {
             if (!prev) return null;
@@ -95,7 +102,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (email: string, password: string) => {
     setIsLoading(true);
     try {
-      const result = await api.login({ email, password });
+      const result = await loginApi({ email, password });
       setToken(result.token);
       setUser(result.user);
       return { success: true, user: result.user };

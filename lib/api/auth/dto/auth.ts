@@ -1,4 +1,4 @@
-import type { EmployeeProfile } from "./employee";
+import type { EmployeeProfile } from "../../employee/dto";
 
 export interface LoginCredentials {
   email: string;

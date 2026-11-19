@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import type { EmployeeProfile } from "@/lib/api/dto";
+import type { EmployeeProfile } from "@/lib/api/employee/dto";
 
 export function ProfileOverviewCard({
   profile,
