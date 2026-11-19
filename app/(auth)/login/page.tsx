@@ -7,7 +7,7 @@ import {
   UsersRound,
 } from "lucide-react";
 import Link from "next/link";
-import { LoginForm } from "./(component)/login-form";
+import { LoginForm } from "@/app/(auth)/login/_components/login-form";
 import { Card } from "@/components/ui/card";
 
 const attendance = [
