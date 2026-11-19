@@ -1,7 +1,7 @@
 import { request } from "../client";
 import { setAuthSession } from "../session";
-import type { EmployeeProfile } from "../../employee/dto";
 import type { LoginCredentials, LoginResponse, LoginResult } from "./dto";
+import {EmployeeProfile} from "@/lib/api/employee/dto";
 
 export function parseJwt(token: string): Record<string, unknown> | null {
   try {
