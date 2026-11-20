@@ -1,32 +1,27 @@
 "use client";
 
-import type {SyntheticEvent} from "react";
 import {Eye, EyeOff, Loader2, LockKeyhole, Mail, Phone, ShieldCheck, User,} from "lucide-react";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
-import type {EmployeeProfile} from "@/lib/api/employee/dto/employee.dto";
+import type {ProfileEditCardProps, ProfileOverviewCardProps,} from "@/app/profile/_types/profile.type";
 import {AvatarUploadField} from "./avatar-upload-field";
-import {ProfileOverviewCardProps, ProfileEditCardProps} from "@/app/profile/_types/profile.type";
 
-export function ProfileOverviewCard({
-                                      profile,
-                                      photo,
-                                    }: ProfileOverviewCardProps) {
-  return (
-      <div className="rounded-2xl border border-[#e5eae5] bg-white p-6 shadow-xs">
-        <div className="flex flex-col items-center text-center">
-          <div className="flex size-24 items-center justify-center overflow-hidden rounded-full border-4 border-[#e8f1ec] bg-[#f8faf8]">
-            {photo ? (
-                <img
-                    src={photo}
-                    alt={profile?.name || "Employee avatar"}
-                    className="size-full object-cover"
-                />
-            ) : (
-                <User className="size-10 text-[#98a49c]" />
-            )}
-          </div>
+export function ProfileOverviewCard({ profile }: ProfileOverviewCardProps) {
+    return (
+        <div className="rounded-2xl border border-[#e5eae5] bg-white p-6 shadow-xs">
+            <div className="flex flex-col items-center text-center">
+                <div className="flex size-24 items-center justify-center overflow-hidden rounded-full border-4 border-[#e8f1ec] bg-[#f8faf8]">
+                    {profile?.photo ? (
+                        <img
+                            src={profile.photo}
+                            alt={profile?.name || "Employee avatar"}
+                            className="size-full object-cover"
+                        />
+                    ) : (
+                        <User className="size-10 text-[#98a49c]" />
+                    )}
+                </div>
 
           <h2 className="mt-4 text-lg font-bold text-[#17261f]">
             {profile?.name || "Employee"}
@@ -117,7 +112,6 @@ export function ProfileEditCard({
           </p>
         </div>
 
-        {/* Tidy Photo Uploader */}
         <AvatarUploadField
             photo={photo}
             initialPhoto={profile?.photo || ""}
@@ -161,7 +155,6 @@ export function ProfileEditCard({
           </div>
         </div>
 
-        {/* Password Section */}
         <div className="space-y-5 border-t border-[#e5eae5] pt-6">
           <div>
             <h3 className="text-base font-bold text-[#17261f]">

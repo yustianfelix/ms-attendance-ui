@@ -33,3 +33,7 @@ export interface ProfileEditCardProps {
     onToggleNewPassword: () => void;
     onSubmit: (e: SyntheticEvent<HTMLFormElement>) => void;
 }
+
+export interface ProfileOverviewCardProps {
+    profile: EmployeeProfile | null;
+}

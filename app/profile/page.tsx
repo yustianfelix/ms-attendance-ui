@@ -1,6 +1,6 @@
 "use client";
 
-import {useState, type SyntheticEvent} from "react";
+import {useEffect, useState, type SyntheticEvent} from "react";
 import Link from "next/link";
 import {ArrowLeft, Loader2, RefreshCw, User} from "lucide-react";
 import {toast} from "sonner";
@@ -14,11 +14,9 @@ import {ProfileEditCard, ProfileOverviewCard, ProfileSecurityNote,} from "./_com
 export default function ProfilePage() {
   const { user, isLoading, updateUser, refreshProfile } = useAuth();
 
-  const [profile, setProfile] = useState<EmployeeProfile | null>(() => user);
-  const [phoneNumber, setPhoneNumber] = useState<string>(
-      () => user?.phoneNumber || ""
-  );
-  const [photo, setPhoto] = useState<string>(() => user?.photo || "");
+  const [profile, setProfile] = useState<EmployeeProfile | null>(null);
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [photo, setPhoto] = useState<string>("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -28,6 +26,14 @@ export default function ProfilePage() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      setProfile(user);
+      setPhoneNumber(user.phoneNumber || "");
+      setPhoto(user.photo || "");
+    }
+  }, [user]);
 
   const activeProfile = profile || user;
 
@@ -150,7 +156,7 @@ export default function ProfilePage() {
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
             {/* Profile Overview Card */}
             <div className="space-y-6 lg:col-span-1">
-              <ProfileOverviewCard profile={activeProfile} photo={photo} />
+              <ProfileOverviewCard profile={activeProfile} photo={activeProfile?.photo || ""} />
               <ProfileSecurityNote />
             </div>
 

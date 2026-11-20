@@ -1,15 +1,15 @@
 "use client";
 
-import { useRef, useState, type ChangeEvent, type DragEvent } from "react";
-import { Camera, RotateCcw, Upload, User } from "lucide-react";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import type { AvatarUploadFieldProps } from "@/app/profile/_types/profile.type";
+import {useRef, useState, type ChangeEvent, type DragEvent} from "react";
+import {Camera, RotateCcw, Upload, User} from "lucide-react";
+import {toast} from "sonner";
+import {Button} from "@/components/ui/button";
+import type {AvatarUploadFieldProps} from "@/app/profile/_types/profile.type";
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MiB raw input limit
 const TARGET_SIZE = 512; // Output dimensions (512x512px)
-const OUTPUT_QUALITY = 0.85; // 85% quality
+const OUTPUT_QUALITY = 0.85;
 
 function resizeAvatarImage(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -29,7 +29,6 @@ function resizeAvatarImage(file: File): Promise<string> {
                 return;
             }
 
-            // Center-crop to a 1:1 square so circular avatars never stretch
             const minSide = Math.min(img.width, img.height);
             const sx = (img.width - minSide) / 2;
             const sy = (img.height - minSide) / 2;
@@ -48,7 +47,6 @@ function resizeAvatarImage(file: File): Promise<string> {
                 TARGET_SIZE
             );
 
-            // Preserve transparency if PNG/WebP, otherwise output clean JPEG
             const outputMime =
                 file.type === "image/png" ? "image/png" : "image/jpeg";
             resolve(canvas.toDataURL(outputMime, OUTPUT_QUALITY));
