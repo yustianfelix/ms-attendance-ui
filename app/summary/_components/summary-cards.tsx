@@ -1,18 +1,12 @@
-import type { SyntheticEvent } from "react";
+import type {SyntheticEvent} from "react";
 import Link from "next/link";
-import {
-  Calendar,
-  Clock,
-  Filter,
-  Loader2,
-  RefreshCw,
-  Search,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import type { AttendanceRecord } from "@/lib/api/attendance/dto/attendance.dto";
+import {Calendar, Clock, Filter, Loader2, RefreshCw, Search,} from "lucide-react";
+import {Button} from "@/components/ui/button";
+import {Card} from "@/components/ui/card";
+import {Input} from "@/components/ui/input";
+import {Label} from "@/components/ui/label";
+import type {AttendanceRecord} from "@/lib/api/attendance/dto/attendance.dto";
+import {AttendanceEntriesCardProps} from "@/app/summary/_types/summary.type";
 
 export type SummaryPreset = "week" | "month" | "last30" | "all";
 
@@ -167,13 +161,6 @@ export function SummaryStatsCards({
       ))}
     </div>
   );
-}
-
-interface AttendanceEntriesCardProps {
-  records: AttendanceRecord[];
-  isFetching: boolean;
-  onRefresh: () => void;
-  calculateDuration: (inTime?: string, outTime?: string | null) => string;
 }
 
 export function AttendanceEntriesCard({
