@@ -6,6 +6,7 @@ import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
 import type {ProfileEditCardProps, ProfileOverviewCardProps,} from "@/app/profile/_types/profile.type";
 import {AvatarUploadField} from "./avatar-upload-field";
+import NextImage from "next/image";
 
 export function ProfileOverviewCard({ profile }: ProfileOverviewCardProps) {
     return (
@@ -13,9 +14,12 @@ export function ProfileOverviewCard({ profile }: ProfileOverviewCardProps) {
             <div className="flex flex-col items-center text-center">
                 <div className="flex size-24 items-center justify-center overflow-hidden rounded-full border-4 border-[#e8f1ec] bg-[#f8faf8]">
                     {profile?.photo ? (
-                        <img
+                        <NextImage
                             src={profile.photo}
                             alt={profile?.name || "Employee avatar"}
+                            width={96}
+                            height={96}
+                            unoptimized
                             className="size-full object-cover"
                         />
                     ) : (

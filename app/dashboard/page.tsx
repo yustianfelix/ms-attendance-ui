@@ -1,25 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import {
-  ArrowRight,
-  Clock,
-  Loader2,
-  Sparkles,
-} from "lucide-react";
-import { toast } from "sonner";
-import { Navbar } from "@/components/navbar";
-import { Button } from "@/components/ui/button";
-import {
-  getAttendanceSummary,
-  recordAttendance,
-} from "@/lib/api/attendance/attendance";
-import type { AttendanceRecord } from "@/lib/api/attendance/dto/attendance.dto";
-import { useAuth } from "@/lib/auth-context";
-import { DashboardAttendanceCard } from "./_components/dashboard-attendance-card";
-import { DashboardProfileCard } from "./_components/dashboard-profile-card";
-import { DashboardSummaryCard } from "./_components/dashboard-summary-card";
+import {useEffect, useState} from "react";
+import {Clock, Loader2, Sparkles,} from "lucide-react";
+import {toast} from "sonner";
+import {Navbar} from "@/components/navbar";
+import {getAttendanceSummary, recordAttendance,} from "@/lib/api/attendance/attendance";
+import type {AttendanceRecord} from "@/lib/api/attendance/dto/attendance.dto";
+import {useAuth} from "@/lib/auth-context";
+import {DashboardAttendanceCard} from "./_components/dashboard-attendance-card";
+import {DashboardProfileCard} from "./_components/dashboard-profile-card";
+import {DashboardSummaryCard} from "./_components/dashboard-summary-card";
 
 export default function DashboardPage() {
   const { user, isLoading, refreshProfile } = useAuth();

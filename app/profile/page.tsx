@@ -1,6 +1,6 @@
 "use client";
 
-import {useEffect, useState, type SyntheticEvent} from "react";
+import {useState, type SyntheticEvent} from "react";
 import Link from "next/link";
 import {ArrowLeft, Loader2, RefreshCw, User} from "lucide-react";
 import {toast} from "sonner";
@@ -14,9 +14,11 @@ import {ProfileEditCard, ProfileOverviewCard, ProfileSecurityNote,} from "./_com
 export default function ProfilePage() {
   const { user, isLoading, updateUser, refreshProfile } = useAuth();
 
-  const [profile, setProfile] = useState<EmployeeProfile | null>(null);
-  const [phoneNumber, setPhoneNumber] = useState<string>("");
-  const [photo, setPhoto] = useState<string>("");
+  const [profileOverride, setProfileOverride] =
+      useState<EmployeeProfile | null>(null);
+  const [phoneDraft, setPhoneDraft] = useState<string | null>(null);
+  const [photoDraft, setPhotoDraft] = useState<string | null>(null);
+
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -27,24 +29,18 @@ export default function ProfilePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  useEffect(() => {
-    if (user) {
-      setProfile(user);
-      setPhoneNumber(user.phoneNumber || "");
-      setPhoto(user.photo || "");
-    }
-  }, [user]);
-
-  const activeProfile = profile || user;
+  const activeProfile = profileOverride || user;
+  const phoneNumber = phoneDraft ?? activeProfile?.phoneNumber ?? "";
+  const photo = photoDraft ?? activeProfile?.photo ?? "";
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
     try {
       const refreshed = await refreshProfile();
       if (refreshed) {
-        setProfile(refreshed);
-        setPhoneNumber(refreshed.phoneNumber || "");
-        setPhoto(refreshed.photo || "");
+        setProfileOverride(refreshed);
+        setPhoneDraft(null);
+        setPhotoDraft(null);
         toast.success("Profile refreshed from server.");
       }
     } catch {
@@ -88,7 +84,11 @@ export default function ProfilePage() {
       });
 
       updateUser(updated);
-      setProfile((prev) => (prev ? { ...prev, ...updated } : updated));
+      setProfileOverride((prev) =>
+          prev ? { ...prev, ...updated } : { ...activeProfile, ...updated }
+      );
+      setPhoneDraft(null);
+      setPhotoDraft(null);
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
@@ -156,7 +156,10 @@ export default function ProfilePage() {
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
             {/* Profile Overview Card */}
             <div className="space-y-6 lg:col-span-1">
-              <ProfileOverviewCard profile={activeProfile} photo={activeProfile?.photo || ""} />
+              <ProfileOverviewCard
+                  profile={activeProfile}
+                  photo={activeProfile?.photo || ""}
+              />
               <ProfileSecurityNote />
             </div>
 
@@ -172,8 +175,8 @@ export default function ProfilePage() {
                   showCurrentPassword={showCurrentPassword}
                   showNewPassword={showNewPassword}
                   isSubmitting={isSubmitting}
-                  onPhotoChange={setPhoto}
-                  onPhoneNumberChange={setPhoneNumber}
+                  onPhotoChange={setPhotoDraft}
+                  onPhoneNumberChange={setPhoneDraft}
                   onCurrentPasswordChange={setCurrentPassword}
                   onNewPasswordChange={setNewPassword}
                   onConfirmPasswordChange={setConfirmPassword}

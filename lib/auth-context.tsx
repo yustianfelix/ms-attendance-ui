@@ -1,30 +1,22 @@
 "use client";
 
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  useCallback,
-} from "react";
-import { useRouter, usePathname } from "next/navigation";
-import { UNAUTHORIZED_EVENT } from "./api/client";
-import { getProfile } from "./api/employee/employee";
-import { login as loginApi } from "./api/auth/auth";
-import {
-  clearAuthSession,
-  getStoredToken,
-  getStoredUser,
-  setAuthSession,
-} from "./api/session";
-import type { EmployeeProfile } from "./api/employee/dto/employee.dto";
+import React, {createContext, useContext, useEffect, useState, useCallback, useSyncExternalStore,} from "react";
+import {useRouter, usePathname} from "next/navigation";
+import {UNAUTHORIZED_EVENT} from "./api/client";
+import {getProfile} from "./api/employee/employee";
+import {login as loginApi} from "./api/auth/auth";
+import {clearAuthSession, getStoredToken, getStoredUser, setAuthSession,} from "./api/session";
+import type {EmployeeProfile} from "./api/employee/dto/employee.dto";
 
 interface AuthContextType {
   user: EmployeeProfile | null;
   token: string | null;
   isLoading: boolean;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<{ success: boolean; user: EmployeeProfile }>;
+  login: (
+      email: string,
+      password: string
+  ) => Promise<{ success: boolean; user: EmployeeProfile }>;
   logout: () => void;
   refreshProfile: () => Promise<EmployeeProfile | null>;
   updateUser: (updated: Partial<EmployeeProfile>) => void;
@@ -32,18 +24,27 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const emptySubscribe = () => () => {};
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<EmployeeProfile | null>(null);
-  const [token, setToken] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const isHydrated = useSyncExternalStore(
+      emptySubscribe,
+      () => true,
+      () => false
+  );
+
+  const [user, setUser] = useState<EmployeeProfile | null>(() =>
+      typeof window !== "undefined" ? getStoredUser() : null
+  );
+  const [token, setToken] = useState<string | null>(() =>
+      typeof window !== "undefined" ? getStoredToken() : null
+  );
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+
   const router = useRouter();
   const pathname = usePathname();
 
-  useEffect(() => {
-    setUser(getStoredUser());
-    setToken(getStoredToken());
-    setIsLoading(false);
-  }, []);
+  const isLoading = !isHydrated || isLoggingIn;
 
   const logout = useCallback(() => {
     clearAuthSession();
@@ -80,17 +81,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (token && employeeId) {
       getProfile(employeeId)
-        .then((fresh) => {
-          setUser((prev) => {
-            if (!prev) return null;
-            const merged = { ...prev, ...fresh };
-            setAuthSession(token, merged);
-            return merged;
+          .then((fresh) => {
+            setUser((prev) => {
+              if (!prev) return null;
+              const merged = { ...prev, ...fresh };
+              setAuthSession(token, merged);
+              return merged;
+            });
+          })
+          .catch((err) => {
+            console.warn("Session verification warning:", err);
           });
-        })
-        .catch((err) => {
-          console.warn("Session verification warning:", err);
-        });
     }
   }, [token, employeeId]);
 
@@ -106,14 +107,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [token, isLoading, pathname, router]);
 
   const login = async (email: string, password: string) => {
-    setIsLoading(true);
+    setIsLoggingIn(true);
     try {
       const result = await loginApi({ email, password });
       setToken(result.token);
       setUser(result.user);
       return { success: true, user: result.user };
     } finally {
-      setIsLoading(false);
+      setIsLoggingIn(false);
     }
   };
 
@@ -130,20 +131,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        token,
-        isLoading,
-        isAuthenticated: !!token && !!user,
-        login,
-        logout,
-        refreshProfile,
-        updateUser,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
+      <AuthContext.Provider
+          value={{
+            user,
+            token,
+            isLoading,
+            isAuthenticated: !!token && !!user,
+            login,
+            logout,
+            refreshProfile,
+            updateUser,
+          }}
+      >
+        {children}
+      </AuthContext.Provider>
   );
 }
 

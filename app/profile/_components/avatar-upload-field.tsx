@@ -5,6 +5,7 @@ import {Camera, RotateCcw, Upload, User} from "lucide-react";
 import {toast} from "sonner";
 import {Button} from "@/components/ui/button";
 import type {AvatarUploadFieldProps} from "@/app/profile/_types/profile.type";
+import NextImage from "next/image";
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MiB raw input limit
@@ -139,9 +140,12 @@ export function AvatarUploadField({
                     aria-label="Change profile photo"
                 >
                     {photo ? (
-                        <img
+                        <NextImage
                             src={photo}
                             alt={name || "Profile preview"}
+                            width={64}
+                            height={64}
+                            unoptimized
                             className="size-full object-cover"
                         />
                     ) : (
