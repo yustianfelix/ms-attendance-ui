@@ -1,361 +1,292 @@
-import type { SyntheticEvent } from "react";
-import {
-  Eye,
-  EyeOff,
-  Image as ImageIcon,
-  KeyRound,
-  Loader2,
-  Lock,
-  Mail,
-  Phone,
-  Save,
-  Shield,
-  User,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import type { EmployeeProfile } from "@/lib/api/employee/dto/employee.dto";
+"use client";
+
+import type {SyntheticEvent} from "react";
+import {Eye, EyeOff, Loader2, LockKeyhole, Mail, Phone, ShieldCheck, User,} from "lucide-react";
+import {Button} from "@/components/ui/button";
+import {Input} from "@/components/ui/input";
+import {Label} from "@/components/ui/label";
+import type {EmployeeProfile} from "@/lib/api/employee/dto/employee.dto";
+import {AvatarUploadField} from "./avatar-upload-field";
+import {ProfileOverviewCardProps, ProfileEditCardProps} from "@/app/profile/_types/profile.type";
 
 export function ProfileOverviewCard({
-  profile,
-  photo,
-}: {
-  profile: EmployeeProfile | null;
-  photo: string;
-}) {
-  const initials = profile?.name
-    ? profile.name
-      .split(" ")
-      .map((namePart) => namePart[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2)
-    : "U";
-
+                                      profile,
+                                      photo,
+                                    }: ProfileOverviewCardProps) {
   return (
-    <Card className="rounded-3xl border border-[#e5eae5] bg-white p-6 shadow-sm">
-      <div className="flex flex-col items-center text-center">
-        <div
-          className="relative mb-4 flex size-24 items-center justify-center overflow-hidden rounded-2xl bg-[#e3ece6] text-3xl font-bold text-[#176b50] shadow-sm">
-          {photo ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={photo}
-              alt={profile?.name || "Profile"}
-              className="size-full object-cover"
-            />
-          ) : (
-            initials
+      <div className="rounded-2xl border border-[#e5eae5] bg-white p-6 shadow-xs">
+        <div className="flex flex-col items-center text-center">
+          <div className="flex size-24 items-center justify-center overflow-hidden rounded-full border-4 border-[#e8f1ec] bg-[#f8faf8]">
+            {photo ? (
+                <img
+                    src={photo}
+                    alt={profile?.name || "Employee avatar"}
+                    className="size-full object-cover"
+                />
+            ) : (
+                <User className="size-10 text-[#98a49c]" />
+            )}
+          </div>
+
+          <h2 className="mt-4 text-lg font-bold text-[#17261f]">
+            {profile?.name || "Employee"}
+          </h2>
+          <p className="mt-0.5 text-xs text-[#6c7d71]">{profile?.email}</p>
+
+          {profile?.employeeId && (
+              <span className="mt-3 inline-flex items-center rounded-full bg-[#e8f1ec] px-3 py-1 text-xs font-semibold text-[#176b50]">
+            ID: {profile.employeeId}
+          </span>
           )}
         </div>
 
-        <h2 className="text-xl font-bold text-[#17261f]">
-          {profile?.name || "Employee"}
-        </h2>
-        <p className="text-xs text-[#75867a]">{profile?.email}</p>
-
-        <div
-          className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-[#e8f1ec] px-3 py-1 text-xs font-semibold text-[#176b50] capitalize">
-          <Shield className="size-3.5" />
-          {profile?.role || "Employee"}
-        </div>
-      </div>
-
-      <div className="mt-6 space-y-3.5 border-t border-[#edf0ec] pt-5 text-xs">
-        <div>
-          <span className="block font-medium text-[#738478]">Employee ID</span>
-          <span className="font-mono text-sm font-semibold text-[#17261f]">
-            #{profile?.employeeId || "N/A"}
+        <div className="mt-6 space-y-3 border-t border-[#e5eae5] pt-5 text-xs">
+          <div className="flex items-center justify-between text-[#6c7d71]">
+          <span className="inline-flex items-center gap-1.5 font-medium">
+            <Mail className="size-3.5 text-[#98a49c]" />
+            Email
           </span>
-        </div>
-
-        <div>
-          <span className="block font-medium text-[#738478]">Email</span>
-          <span className="text-sm font-medium text-[#17261f]">
-            {profile?.email}
+            <span className="font-semibold text-[#17261f]">
+            {profile?.email || "—"}
           </span>
-        </div>
+          </div>
 
-        <div>
-          <span className="block font-medium text-[#738478]">Phone Number</span>
-          <span className="text-sm font-medium text-[#17261f]">
+          <div className="flex items-center justify-between text-[#6c7d71]">
+          <span className="inline-flex items-center gap-1.5 font-medium">
+            <Phone className="size-3.5 text-[#98a49c]" />
+            Phone
+          </span>
+            <span className="font-semibold text-[#17261f]">
             {profile?.phoneNumber || "Not set"}
           </span>
-        </div>
-
-        {profile?.updatedAt && (
-          <div>
-            <span className="block font-medium text-[#738478]">Last Updated</span>
-            <span className="text-xs text-[#738478]">
-              {new Date(profile.updatedAt).toLocaleString()}
-            </span>
           </div>
-        )}
+        </div>
       </div>
-    </Card>
   );
 }
 
 export function ProfileSecurityNote() {
   return (
-    <Card className="rounded-2xl border border-dashed border-[#ccd9cf] bg-[#f7f9f7] p-5 text-xs text-[#526358]">
-      <p className="font-semibold text-[#17261f]">Security Note</p>
-      <p className="mt-1 leading-relaxed">
-        Changes to phone number, profile photo, or password require your current
-        password for authentication.
-      </p>
-    </Card>
+      <div className="rounded-2xl border border-[#d3ded5] bg-[#e8f1ec]/60 p-5">
+        <div className="flex items-start gap-3">
+          <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-[#176b50] text-white">
+            <ShieldCheck className="size-4" />
+          </div>
+          <div className="space-y-1">
+            <h3 className="text-xs font-bold text-[#17261f]">
+              Security Verification
+            </h3>
+            <p className="text-xs leading-relaxed text-[#53665a]">
+              Your current password is required to confirm any changes to your
+              profile photo, contact number, or login credentials.
+            </p>
+          </div>
+        </div>
+      </div>
   );
 }
 
-interface ProfileEditCardProps {
-  profile: EmployeeProfile | null;
-  phoneNumber: string;
-  photo: string;
-  currentPassword: string;
-  newPassword: string;
-  confirmPassword: string;
-  showCurrentPassword: boolean;
-  showNewPassword: boolean;
-  isSubmitting: boolean;
-  onPhoneNumberChange: (value: string) => void;
-  onPhotoChange: (value: string) => void;
-  onCurrentPasswordChange: (value: string) => void;
-  onNewPasswordChange: (value: string) => void;
-  onConfirmPasswordChange: (value: string) => void;
-  onToggleCurrentPassword: () => void;
-  onToggleNewPassword: () => void;
-  onSubmit: (event: SyntheticEvent<HTMLFormElement>) => void;
-}
-
 export function ProfileEditCard({
-  profile,
-  phoneNumber,
-  photo,
-  currentPassword,
-  newPassword,
-  confirmPassword,
-  showCurrentPassword,
-  showNewPassword,
-  isSubmitting,
-  onPhoneNumberChange,
-  onPhotoChange,
-  onCurrentPasswordChange,
-  onNewPasswordChange,
-  onConfirmPasswordChange,
-  onToggleCurrentPassword,
-  onToggleNewPassword,
-  onSubmit,
-}: ProfileEditCardProps) {
+                                  profile,
+                                  photo,
+                                  phoneNumber,
+                                  currentPassword,
+                                  newPassword,
+                                  confirmPassword,
+                                  showCurrentPassword,
+                                  showNewPassword,
+                                  isSubmitting,
+                                  onPhotoChange,
+                                  onPhoneNumberChange,
+                                  onCurrentPasswordChange,
+                                  onNewPasswordChange,
+                                  onConfirmPasswordChange,
+                                  onToggleCurrentPassword,
+                                  onToggleNewPassword,
+                                  onSubmit,
+                                }: ProfileEditCardProps) {
   return (
-    <Card className="rounded-3xl border border-[#e5eae5] bg-white p-6 shadow-sm sm:p-8">
-      <h2 className="text-lg font-bold text-[#17261f]">
-        Edit Profile Information
-      </h2>
-      <p className="mt-1 text-xs text-[#718078]">
-        Update your contact details or change your password.
-      </p>
+      <form
+          onSubmit={onSubmit}
+          className="space-y-6 rounded-2xl border border-[#e5eae5] bg-white p-6 shadow-xs sm:p-8"
+      >
+        <div>
+          <h2 className="text-lg font-bold text-[#17261f]">Personal Details</h2>
+          <p className="mt-0.5 text-xs text-[#6c7d71]">
+            Update your profile photo and contact information.
+          </p>
+        </div>
 
-      <form onSubmit={onSubmit} className="mt-6 space-y-6">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div className="space-y-1.5">
-            <Label className="text-xs font-semibold text-[#526559]">Full Name</Label>
-            <div className="relative">
-              <User className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-[#96a69c]" />
-              <Input
-                disabled
+        {/* Tidy Photo Uploader */}
+        <AvatarUploadField
+            photo={photo}
+            initialPhoto={profile?.photo || ""}
+            name={profile?.name}
+            onChange={onPhotoChange}
+            disabled={isSubmitting}
+        />
+
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+          <div className="space-y-2">
+            <Label className="text-[13px] text-[#35463c]" htmlFor="full-name">
+              Full name
+            </Label>
+            <Input
+                id="full-name"
                 value={profile?.name || ""}
-                className="h-11 rounded-xl border-[#e5eae5] bg-[#f5f8f5] pl-10 text-sm text-[#738478]"
-              />
-            </div>
-          </div>
-
-          <div className="space-y-1.5">
-            <Label className="text-xs font-semibold text-[#526559]">
-              Email Address
-            </Label>
-            <div className="relative">
-              <Mail className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-[#96a69c]" />
-              <Input
                 disabled
-                value={profile?.email || ""}
-                className="h-11 rounded-xl border-[#e5eae5] bg-[#f5f8f5] pl-10 text-sm text-[#738478]"
+                className="h-11 rounded-xl border-[#e5eae5] bg-[#f8faf8] text-sm text-[#6c7d71]"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-[13px] text-[#35463c]" htmlFor="phone-number">
+              Phone number
+            </Label>
+            <div className="relative">
+              <Phone
+                  aria-hidden="true"
+                  className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-[#98a49c]"
+              />
+              <Input
+                  id="phone-number"
+                  type="tel"
+                  placeholder="+62 812 3456 7890"
+                  value={phoneNumber}
+                  onChange={(e) => onPhoneNumberChange(e.target.value)}
+                  disabled={isSubmitting}
+                  className="h-11 rounded-xl border-[#e5eae5] bg-white pl-10 text-sm placeholder:text-[#a3ada6] focus-visible:border-[#5b997c] focus-visible:ring-[#5b997c]/15"
               />
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div className="space-y-1.5">
-            <Label
-              className="text-xs font-semibold text-[#35463c]"
-              htmlFor="phone"
-            >
-              Phone Number
-            </Label>
-            <div className="relative">
-              <Phone className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-[#96a69c]" />
-              <Input
-                id="phone"
-                type="tel"
-                value={phoneNumber}
-                onChange={(event) => onPhoneNumberChange(event.target.value)}
-                placeholder="+62 812-3456-7890"
-                className="h-11 rounded-xl border-[#dce5df] bg-white pl-10 text-sm"
-              />
-            </div>
-          </div>
-
-          <div className="space-y-1.5">
-            <Label
-              className="text-xs font-semibold text-[#35463c]"
-              htmlFor="photo"
-            >
-              Photo URL
-            </Label>
-            <div className="relative">
-              <ImageIcon className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-[#96a69c]" />
-              <Input
-                id="photo"
-                type="url"
-                value={photo}
-                onChange={(event) => onPhotoChange(event.target.value)}
-                placeholder="https://example.com/avatar.jpg"
-                className="h-11 rounded-xl border-[#dce5df] bg-white pl-10 text-sm"
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-2xl border border-[#e5eae5] bg-[#fafcfa] p-5">
-          <div className="mb-4 flex items-center gap-2">
-            <KeyRound className="size-4 text-[#176b50]" />
-            <h3 className="text-sm font-bold text-[#17261f]">
-              Change Password (Optional)
+        {/* Password Section */}
+        <div className="space-y-5 border-t border-[#e5eae5] pt-6">
+          <div>
+            <h3 className="text-base font-bold text-[#17261f]">
+              Password & Authentication
             </h3>
+            <p className="mt-0.5 text-xs text-[#6c7d71]">
+              Leave new password blank if you only want to update your photo or
+              phone number.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div className="space-y-1.5">
-              <Label
-                className="text-xs font-semibold text-[#35463c]"
-                htmlFor="newPassword"
-              >
-                New Password
-              </Label>
-              <div className="relative">
-                <Lock className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-[#96a69c]" />
-                <Input
-                  id="newPassword"
-                  type={showNewPassword ? "text" : "password"}
-                  value={newPassword}
-                  onChange={(event) => onNewPasswordChange(event.target.value)}
-                  placeholder="Min. 12 characters"
-                  className="h-11 rounded-xl border-[#dce5df] bg-white pr-10 pl-10 text-sm"
-                />
-                <button
-                  type="button"
-                  onClick={onToggleNewPassword}
-                  className="absolute top-1/2 right-3 -translate-y-1/2 text-[#98a59c] hover:text-[#17261f]"
-                >
-                  {showNewPassword ? (
-                    <EyeOff className="size-4" />
-                  ) : (
-                    <Eye className="size-4" />
-                  )}
-                </button>
-              </div>
-              <p className="text-[11px] text-[#728377]">
-                Must be at least 12 characters long
-              </p>
-            </div>
-
-            <div className="space-y-1.5">
-              <Label
-                className="text-xs font-semibold text-[#35463c]"
-                htmlFor="confirmPassword"
-              >
-                Confirm New Password
-              </Label>
-              <div className="relative">
-                <Lock className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-[#96a69c]" />
-                <Input
-                  id="confirmPassword"
-                  type={showNewPassword ? "text" : "password"}
-                  value={confirmPassword}
-                  onChange={(event) =>
-                    onConfirmPasswordChange(event.target.value)
-                  }
-                  placeholder="Re-type new password"
-                  className="h-11 rounded-xl border-[#dce5df] bg-white pl-10 text-sm"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-2xl border border-amber-200 bg-amber-50/50 p-5">
-          <div className="space-y-1.5">
+          <div className="space-y-2">
             <Label
-              className="text-xs font-semibold text-amber-900"
-              htmlFor="currentPassword"
+                className="text-[13px] text-[#35463c]"
+                htmlFor="current-password"
             >
-              Current Password (Required to save changes) *
+              Current password <span className="text-red-500">*</span>
             </Label>
             <div className="relative">
-              <Lock className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-amber-700" />
+              <LockKeyhole
+                  aria-hidden="true"
+                  className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-[#98a49c]"
+              />
               <Input
-                id="currentPassword"
-                type={showCurrentPassword ? "text" : "password"}
-                value={currentPassword}
-                onChange={(event) =>
-                  onCurrentPasswordChange(event.target.value)
-                }
-                placeholder="Enter your current password"
-                required
-                className="h-11 rounded-xl border-amber-200 bg-white pr-10 pl-10 text-sm focus-visible:border-[#176b50]"
+                  id="current-password"
+                  type={showCurrentPassword ? "text" : "password"}
+                  placeholder="Enter current password to authorize changes"
+                  value={currentPassword}
+                  onChange={(e) => onCurrentPasswordChange(e.target.value)}
+                  disabled={isSubmitting}
+                  required
+                  className="h-11 rounded-xl border-[#e5eae5] bg-white pr-11 pl-10 text-sm placeholder:text-[#a3ada6] focus-visible:border-[#5b997c] focus-visible:ring-[#5b997c]/15"
               />
               <button
-                type="button"
-                onClick={onToggleCurrentPassword}
-                className="absolute top-1/2 right-3 -translate-y-1/2 text-amber-700 hover:text-amber-900"
+                  type="button"
+                  onClick={onToggleCurrentPassword}
+                  disabled={isSubmitting}
+                  aria-label={
+                    showCurrentPassword
+                        ? "Hide current password"
+                        : "Show current password"
+                  }
+                  className="absolute top-1/2 right-3 flex size-7 -translate-y-1/2 items-center justify-center rounded-lg text-[#98a49c] transition-colors hover:bg-[#f1f4f0] hover:text-[#53665a]"
               >
                 {showCurrentPassword ? (
-                  <EyeOff className="size-4" />
+                    <EyeOff className="size-4" />
                 ) : (
-                  <Eye className="size-4" />
+                    <Eye className="size-4" />
                 )}
               </button>
             </div>
-            <p className="text-[11px] text-amber-800">
-              Your current password is required by the Gateway to authenticate
-              this update.
-            </p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label
+                  className="text-[13px] text-[#35463c]"
+                  htmlFor="new-password"
+              >
+                New password
+              </Label>
+              <div className="relative">
+                <Input
+                    id="new-password"
+                    type={showNewPassword ? "text" : "password"}
+                    placeholder="Min. 12 characters"
+                    value={newPassword}
+                    onChange={(e) => onNewPasswordChange(e.target.value)}
+                    disabled={isSubmitting}
+                    className="h-11 rounded-xl border-[#e5eae5] bg-white pr-11 text-sm placeholder:text-[#a3ada6] focus-visible:border-[#5b997c] focus-visible:ring-[#5b997c]/15"
+                />
+                <button
+                    type="button"
+                    onClick={onToggleNewPassword}
+                    disabled={isSubmitting}
+                    aria-label={
+                      showNewPassword ? "Hide new password" : "Show new password"
+                    }
+                    className="absolute top-1/2 right-3 flex size-7 -translate-y-1/2 items-center justify-center rounded-lg text-[#98a49c] transition-colors hover:bg-[#f1f4f0] hover:text-[#53665a]"
+                >
+                  {showNewPassword ? (
+                      <EyeOff className="size-4" />
+                  ) : (
+                      <Eye className="size-4" />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label
+                  className="text-[13px] text-[#35463c]"
+                  htmlFor="confirm-password"
+              >
+                Confirm new password
+              </Label>
+              <Input
+                  id="confirm-password"
+                  type={showNewPassword ? "text" : "password"}
+                  placeholder="Re-enter new password"
+                  value={confirmPassword}
+                  onChange={(e) => onConfirmPasswordChange(e.target.value)}
+                  disabled={isSubmitting}
+                  className="h-11 rounded-xl border-[#e5eae5] bg-white text-sm placeholder:text-[#a3ada6] focus-visible:border-[#5b997c] focus-visible:ring-[#5b997c]/15"
+              />
+            </div>
           </div>
         </div>
 
         <div className="flex justify-end pt-2">
           <Button
-            type="submit"
-            disabled={isSubmitting || !currentPassword}
-            className="h-11 min-w-[160px] rounded-xl bg-[#176b50] text-sm font-semibold text-white shadow-sm hover:bg-[#12583f] disabled:opacity-50"
+              type="submit"
+              disabled={isSubmitting}
+              className="h-11 rounded-xl bg-[#176b50] px-6 text-sm font-semibold text-white shadow-[0_6px_14px_-7px_rgba(23,107,80,0.7)] transition-all hover:bg-[#12583f] disabled:opacity-70"
           >
             {isSubmitting ? (
-              <>
-                <Loader2 className="mr-2 size-4 animate-spin" />
-                Saving changes...
-              </>
+                <>
+                  <Loader2 className="mr-2 size-4 animate-spin" />
+                  Saving Changes...
+                </>
             ) : (
-              <>
-                <Save className="mr-2 size-4" />
-                Save Changes
-              </>
+                "Save Changes"
             )}
           </Button>
         </div>
       </form>
-    </Card>
   );
 }
