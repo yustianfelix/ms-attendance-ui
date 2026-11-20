@@ -8,6 +8,7 @@ import React, {
   useCallback,
 } from "react";
 import { useRouter, usePathname } from "next/navigation";
+import { UNAUTHORIZED_EVENT } from "./api/client";
 import { getProfile } from "./api/employee/employee";
 import { login as loginApi } from "./api/auth/auth";
 import {
@@ -16,7 +17,7 @@ import {
   getStoredUser,
   setAuthSession,
 } from "./api/session";
-import type { EmployeeProfile } from "./api/employee/dto";
+import type { EmployeeProfile } from "./api/employee/dto/employee.dto";
 
 interface AuthContextType {
   user: EmployeeProfile | null;
@@ -50,6 +51,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setToken(null);
     router.push("/login");
   }, [router]);
+
+  useEffect(() => {
+    window.addEventListener(UNAUTHORIZED_EVENT, logout);
+    return () => window.removeEventListener(UNAUTHORIZED_EVENT, logout);
+  }, [logout]);
 
   const refreshProfile = useCallback(async (): Promise<EmployeeProfile | null> => {
     const currentToken = getStoredToken();

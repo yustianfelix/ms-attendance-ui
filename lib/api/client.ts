@@ -1,4 +1,6 @@
-import { getStoredToken } from "./session";
+import { clearAuthSession, getStoredToken } from "./session";
+
+export const UNAUTHORIZED_EVENT = "auth:unauthorized";
 
 export const GATEWAY_URL =
   process.env.NEXT_PUBLIC_GATEWAY_URL?.replace(/\/$/, "") ||
@@ -29,6 +31,11 @@ export async function request<T>(
   const contentType = res.headers.get("content-type");
   const isJson = contentType && contentType.includes("application/json");
   const data = isJson ? await res.json() : await res.text();
+
+  if (res.status === 401 && token && typeof window !== "undefined") {
+    clearAuthSession();
+    window.dispatchEvent(new Event(UNAUTHORIZED_EVENT));
+  }
 
   if (!res.ok) {
     let errorMsg = `Request failed with status ${res.status}`;

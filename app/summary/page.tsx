@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import { Navbar } from "@/components/navbar";
 import { Button } from "@/components/ui/button";
 import { getAttendanceSummary } from "@/lib/api/attendance/attendance";
-import type { AttendanceRecord } from "@/lib/api/attendance/dto";
+import type { AttendanceRecord } from "@/lib/api/attendance/dto/attendance.dto";
 import { useAuth } from "@/lib/auth-context";
 import {
   AttendanceEntriesCard,

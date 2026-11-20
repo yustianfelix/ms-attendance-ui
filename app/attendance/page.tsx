@@ -13,7 +13,7 @@ import {
   getAttendanceSummary,
   recordAttendance,
 } from "@/lib/api/attendance/attendance";
-import type { AttendanceRecord } from "@/lib/api/attendance/dto";
+import type { AttendanceRecord } from "@/lib/api/attendance/dto/attendance.dto";
 import { useAuth } from "@/lib/auth-context";
 import {
   AttendanceActionCards,

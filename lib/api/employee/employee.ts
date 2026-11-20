@@ -1,7 +1,7 @@
 import { request } from "../client";
 import { getStoredToken, getStoredUser, setAuthSession } from "../session";
-import type { ApiResponse } from "../shared/dto";
-import type { EmployeeProfile, UpdateEmployeeProfilePayload } from "./dto";
+import type { ApiResponse } from "../shared/dto/common.dto";
+import type { EmployeeProfile, UpdateEmployeeProfilePayload } from "./dto/employee.dto";
 
 export async function getProfile(employeeId: string): Promise<EmployeeProfile> {
   const response = await request<ApiResponse<EmployeeProfile>>(

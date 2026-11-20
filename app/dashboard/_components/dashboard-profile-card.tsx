@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import type { EmployeeProfile } from "@/lib/api/employee/dto";
+import type { EmployeeProfile } from "@/lib/api/employee/dto/employee.dto";
 
 export function DashboardProfileCard({ user }: { user: EmployeeProfile | null }) {
   const initials = user?.name

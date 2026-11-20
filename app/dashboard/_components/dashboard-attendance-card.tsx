@@ -2,7 +2,7 @@ import Link from "next/link";
 import { CheckCircle2, Clock, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import type { AttendanceRecord } from "@/lib/api/attendance/dto";
+import type { AttendanceRecord } from "@/lib/api/attendance/dto/attendance.dto";
 
 interface DashboardAttendanceCardProps {
   todayRecord: AttendanceRecord | null;

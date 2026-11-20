@@ -1,4 +1,4 @@
-import type { EmployeeProfile } from "./employee/dto";
+import type { EmployeeProfile } from "./employee/dto/employee.dto";
 
 const TOKEN_KEY = "kantor_auth_token";
 const USER_KEY = "kantor_auth_user";

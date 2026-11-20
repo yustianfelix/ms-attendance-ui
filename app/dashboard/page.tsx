@@ -15,7 +15,7 @@ import {
   getAttendanceSummary,
   recordAttendance,
 } from "@/lib/api/attendance/attendance";
-import type { AttendanceRecord } from "@/lib/api/attendance/dto";
+import type { AttendanceRecord } from "@/lib/api/attendance/dto/attendance.dto";
 import { useAuth } from "@/lib/auth-context";
 import { DashboardAttendanceCard } from "./_components/dashboard-attendance-card";
 import { DashboardProfileCard } from "./_components/dashboard-profile-card";

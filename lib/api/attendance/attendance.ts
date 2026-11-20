@@ -1,10 +1,10 @@
 import { request } from "../client";
-import type { ApiResponse } from "../shared/dto";
+import type { ApiResponse } from "../shared/dto/common.dto";
 import type {
   AttendanceRecord,
   AttendanceSummaryData,
   RecordAttendancePayload,
-} from "./dto";
+} from "./dto/attendance.dto";
 
 export async function recordAttendance(
   payload: RecordAttendancePayload

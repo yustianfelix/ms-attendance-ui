@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import type { AttendanceRecord } from "@/lib/api/attendance/dto";
+import type { AttendanceRecord } from "@/lib/api/attendance/dto/attendance.dto";
 
 export type SummaryPreset = "week" | "month" | "last30" | "all";
 

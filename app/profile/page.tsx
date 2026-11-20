@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import { Navbar } from "@/components/navbar";
 import { Button } from "@/components/ui/button";
 import { updateProfile } from "@/lib/api/employee/employee";
-import type { EmployeeProfile } from "@/lib/api/employee/dto";
+import type { EmployeeProfile } from "@/lib/api/employee/dto/employee.dto";
 import { useAuth } from "@/lib/auth-context";
 import {
   ProfileEditCard,
