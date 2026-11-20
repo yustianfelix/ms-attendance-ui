@@ -2,13 +2,7 @@ import Link from "next/link";
 import { CheckCircle2, Clock, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import type { AttendanceRecord } from "@/lib/api/attendance/dto/attendance.dto";
-
-interface DashboardAttendanceCardProps {
-  todayRecord: AttendanceRecord | null;
-  clockActionLoading: string | null;
-  onClock: (action: "clock-in" | "clock-out") => void;
-}
+import {DashboardAttendanceCardProps} from "@/app/dashboard/_types/dashboard.type";
 
 export function DashboardAttendanceCard({
   todayRecord,
