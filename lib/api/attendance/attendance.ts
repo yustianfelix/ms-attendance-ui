@@ -16,21 +16,23 @@ export async function recordAttendance(
 }
 
 export async function getAttendanceSummary(
-  employeeId: string,
-  startDate?: string,
-  endDate?: string
+    employeeId: string,
+    startDate?: string,
+    endDate?: string
 ): Promise<AttendanceSummaryData> {
+  const params = new URLSearchParams({
+    employee_id: employeeId,
+    ...(startDate ? { start_date: startDate } : {}),
+    ...(endDate ? { end_date: endDate } : {}),
+  });
+
   const response = await request<ApiResponse<AttendanceSummaryData>>(
-    "/attendance/summary",
-    {
-      method: "POST",
-      body: JSON.stringify({
-        employee_id: employeeId,
-        ...(startDate ? { start_date: startDate } : {}),
-        ...(endDate ? { end_date: endDate } : {}),
-      }),
-    }
+      `/attendance/summary?${params.toString()}`,
+      {
+        method: "GET",
+      }
   );
+
   if (response.data) return response.data;
   return response as unknown as AttendanceSummaryData;
 }
